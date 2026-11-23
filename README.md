@@ -8,11 +8,22 @@ Analyze how smartphone specifications and brands are associated with **USA launc
 Dataset: [Mobiles Dataset (2025)](https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025).
 
 ## Team Responsibilities
-- **Member 1 — Data Preparation:** Inspect and clean the dataset, handle missing values and duplicates, create derived attributes, and implement Pandas summaries.
-- **Member 2 — Python Programming:** Build reusable functions, the OOP classes and polymorphism, and NumPy calculations and correlation analysis.
-- **Member 3 — Visualization & Documentation:** Implement four purposeful figures using Matplotlib and Seaborn, interpret findings, and prepare the report and documentation.
 
-**All members:** Review and verify the code and results, document individual contributions and AI assistance, and understand the complete workflow for the individual demonstration.
+### 1. عبدالملك — Data Preparation
+- Implement `load_data()` with missing-file and missing-column handling, `clean_data()`, a derived attribute, and CSV exports using Pandas.
+- Use a set to identify spelling variants and a list of required columns.
+- Write the dataset and cleaning sections of the report.
+
+### 2. عبدالله — OOP & Analysis
+- Implement `AnalysisTask`, `PriceSummary`, and `SpecificationComparison`, with overridden `run(data)` methods, grouped summaries, and a common polymorphic loop.
+- Use a list of analysis tasks and a dictionary of results.
+- Write the program-design and design-revision sections of the report.
+
+### 3. ابراهيم — NumPy & Charts
+- Build the 2D NumPy array, implement two vectorized calculations and a correlation matrix, and create at least four purposeful figures using Matplotlib and Seaborn.
+- Use the correlation matrix in the heatmap and write the results and figures sections of the report.
+
+**Shared by all three:** Agree on findings, recommendations, and limitations; maintain the README, contribution log, and AI-use log; run the complete notebook and verify results together. Every member must understand the full workflow and be able to explain a finding in the individual demonstration.
 
 ## Status
 Proposal stage. Instructor approval and dataset-quality validation are required before full implementation.
