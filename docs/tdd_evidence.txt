@@ -1,0 +1,70 @@
+TDD EVIDENCE - data preparation part 1 (2026-11-25)
+Command: .venv/bin/python -m unittest discover -s tests -v
+Copied from the actual session output. "[...]" marks omitted lines. The output of
+RED 2 was long, so the terminal tool itself truncated its middle; only its status
+list, a few of its messages, and its final summary are kept here. The GREEN test
+list is shortened to its summary; run the command to reproduce it.
+
+=== RED 1: tests written, data_preparation.py does not exist (exit 1) ===
+
+test_data_preparation (unittest.loader._FailedTest.test_data_preparation) ... ERROR
+[...]
+  File "/home/guest/projects/KSU/smartphone-price/tests/test_data_preparation.py", line 23, in <module>
+    from data_preparation import (  # noqa: E402
+    ...<6 lines>...
+    )
+ModuleNotFoundError: No module named 'data_preparation'
+[...]
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+
+=== RED 2: naive version, load_data() = pd.read_csv(path) only (exit 1) ===
+(test names below are shortened by removing the repeated module/class part)
+
+test_inspection_does_not_change_the_data ... ok
+test_no_variants_are_invented ... ok
+test_reports_structure_missing_and_duplicates ... ERROR
+test_variants_cover_case_spaces_and_punctuation ... FAIL
+test_byte_not_valid_in_the_documented_encoding ... FAIL
+test_command_line_reports_errors_without_traceback ... FAIL
+test_duplicate_column_names ... FAIL
+test_empty_files ...
+  (content='') ... FAIL
+  (content=' \n\n') ... FAIL
+test_every_row_too_long ... FAIL
+test_folder_is_not_accepted_as_a_file ... ERROR
+test_header_without_rows ... FAIL
+test_malformed_rows_are_never_skipped_or_padded ...
+  [too many] ... FAIL
+  [too few] ... FAIL
+  [blank line] ... FAIL
+test_missing_columns_are_all_named ... FAIL
+test_missing_file_names_the_path ... ok
+test_unclosed_quote ... FAIL
+test_extra_columns_and_duplicate_rows_are_kept ... ok
+test_text_is_not_converted_and_only_blank_cells_are_missing ... FAIL
+test_default_file_is_the_original_download ... ok
+test_demo_runs_from_another_directory ... FAIL
+test_every_raw_cell_is_preserved ... ERROR
+test_inspection_matches_the_real_file ... ERROR
+test_non_ascii_characters_are_decoded_and_kept ... ERROR
+[...]
+FAIL: test_malformed_rows_are_never_skipped_or_padded [too few]
+AssertionError: ValueError not raised
+FAIL: test_missing_columns_are_all_named
+AssertionError: ValueError not raised
+FAIL: test_text_is_not_converted_and_only_blank_cells_are_missing
+First differing element 0:
+np.int64(7)
+'007'
+[...]
+Ran 22 tests in 0.479s
+
+FAILED (failures=15, errors=5)
+
+=== GREEN: current implementation (exit 0) ===
+[... 22 tests, each "ok" ...]
+Ran 22 tests in 0.497s
+
+OK

@@ -1,0 +1,147 @@
+TDD EVIDENCE - data preparation part 2 (2026-11-25)
+Base command: .venv/bin/python -m unittest discover -s tests [-v] -k <TestClass>
+Copied from the actual session output and shortened; "[...]" marks omitted lines.
+Each slice: tests first -> RED -> implementation -> GREEN, then the next slice.
+
+BASELINE before any change (part 1 tests only), exit 0
+Ran 22 tests in 0.498s
+OK
+
+--- Slice 1: units, currency, separators, decimals (-k ParseNumberTests) ---
+RED, exit 1
+AttributeError: module 'data_preparation' has no attribute 'parse_number'
+Ran 2 tests in 0.003s
+FAILED (errors=18)
+GREEN, exit 0
+Ran 2 tests in 0.001s
+OK
+
+--- Slice 2: missing, placeholder, ambiguous, multiple, nonpositive values ---
+RED (-k test_unclear_values), exit 1
+AssertionError: Tuples differ: (None, 'unexpected_format') != (None, 'missing')
+AssertionError: Tuples differ: (0.0, '') != (None, 'not_positive')
+AssertionError: Tuples differ: (2024.0, '') != (None, 'ambiguous_separator')
+[...]
+Ran 1 test in 0.005s
+FAILED (failures=26)
+GREEN (-k ParseNumberTests), exit 0
+Ran 3 tests in 0.001s
+OK
+
+--- Slice 3: clean_data schema, labels, flags, non-mutation, input errors ---
+RED (-k CleanDataTests), exit 1
+AttributeError: module 'data_preparation' has no attribute 'clean_data'. Did you mean: 'load_data'?
+Ran 5 tests in 0.002s
+FAILED (errors=5)
+GREEN, exit 0
+Ran 5 tests in 0.012s
+OK
+
+--- Slice 4: price_per_gb_ram (-k PricePerGbTests) ---
+RED, exit 1
+KeyError: 'price_per_gb_ram'
+Ran 2 tests in 0.010s
+FAILED (errors=2)
+GREEN, exit 0
+Ran 2 tests in 0.006s
+OK
+
+--- Slice 5: exact duplicates and row audit (-k DuplicateTests) ---
+RED, exit 1
+AttributeError: module 'data_preparation' has no attribute 'audit_rows'
+AssertionError: Lists differ: [1, 2, 3, 4, 5, 6, 7] != [1, 2, 4, 5, 6]
+[...]
+Ran 3 tests in 0.008s
+FAILED (failures=2, errors=1)
+GREEN (-k DuplicateTests -k CleanDataTests -k PricePerGbTests), exit 0
+Ran 10 tests in 0.032s
+OK
+
+--- Slice 6: tablet-like names and the disputed iPhone 16 (-k SourceCaveatTests) ---
+RED, exit 1
+AssertionError: Lists differ: ['', '', ''] != ['source:iphone16_specs_disputed', '', '']
+[...]
+Ran 2 tests in 0.010s
+FAILED (failures=2)
+GREEN, exit 0
+Ran 2 tests in 0.009s
+OK
+
+--- Slice 7: cleaning summary (-k SummaryTests) ---
+RED, exit 1
+AttributeError: module 'data_preparation' has no attribute 'summarize_cleaning'
+Ran 4 tests in 0.014s
+FAILED (errors=4)
+First implementation still failed, exit 1 (pandas turned counts into decimals)
+AssertionError: '5.0' != '5'
+[...]
+Ran 4 tests in 0.029s
+FAILED (failures=3)
+GREEN after converting values to text, exit 0
+Ran 4 tests in 0.041s
+OK
+
+--- Slice 8: CSV export, readback, overwrite protection (-k ExportTests) ---
+RED, exit 1
+AttributeError: module 'data_preparation' has no attribute 'export_results'
+[...]
+Ran 6 tests in 0.007s
+FAILED (errors=7)
+GREEN, exit 0
+Ran 6 tests in 0.095s
+OK
+
+--- Slice 9: command line (-k CommandLineTests) ---
+RED, exit 1 (test_inspection_mode_writes_nothing already passed)
+AssertionError: 0 != 1
+AssertionError: False is not true
+AssertionError: 0 != 2
+Ran 4 tests in 0.951s
+FAILED (failures=3)
+GREEN, exit 0
+Ran 4 tests in 0.961s
+OK
+
+--- Slice 10: real data and source identity (-k RealPipelineTests -k RealLicenseTests) ---
+RED, exit 1, for the new source/sha256 summary row only
+AssertionError: Lists differ: ['rows', 'all', 'raw', '930', 'rows'] != ['source', 'raw_file', 'sha256', 'bb47c4ec3[56 chars], '']
+Ran 6 tests in 0.111s
+FAILED (failures=1)
+GREEN, exit 0
+Ran 6 tests in 0.111s
+OK
+The other 5 tests here passed when first run. They verify finished behavior on the
+real file and license text and are not claimed as RED/GREEN.
+
+--- Slice 11: a very long number must not become infinity (-k test_unclear_values) ---
+RED, exit 1
+AssertionError: Tuples differ: (inf, '') != (None, 'out_of_range')
+Ran 2 tests in 0.094s
+FAILED (failures=1)
+GREEN, exit 0
+Ran 2 tests in 0.093s
+OK
+test_project_outputs_are_identical_to_a_fresh_run was added here and passed when
+first run (verification of the generated outputs/, not RED/GREEN).
+
+FINAL FULL SUITE (22 part 1 + 36 part 2), -v without -k, exit 0
+Ran 58 tests in 1.727s
+OK
+Real run: .venv/bin/python data_preparation.py --clean, exit 0 (930 -> 915 rows)
+
+--- Slice 12: follow-up, ratio overflow found by Hermes review (-k PricePerGbTests) ---
+(RAM 0.01GB and a 308-digit price gave price_per_gb_ram = inf with no flag.)
+RED, exit 1 (the 2 earlier ratio tests still passed)
+test_ratio_too_large_for_a_number_is_missing_with_a_reason [...] FAIL
+    self.assertTrue(pd.isna(clean["price_per_gb_ram"][0]))
+AssertionError: False is not true
+Ran 3 tests in 0.012s
+FAILED (failures=1)
+GREEN, exit 0
+Ran 3 tests in 0.012s
+OK
+FULL SUITE (22 part 1 + 37 part 2), exit 0
+Ran 59 tests in 1.736s
+OK
+This run compared the outputs/ files made before the fix with the fixed code:
+they are byte-identical.

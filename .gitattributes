@@ -1,0 +1,2 @@
+# Keep the original Windows-1252/CRLF download byte-for-byte (no line-ending changes).
+data/raw.csv binary
